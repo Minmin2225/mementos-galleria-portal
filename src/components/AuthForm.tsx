@@ -24,7 +24,14 @@ export const AuthForm = () => {
           email,
           password,
         });
-        if (error) throw error;
+        if (error) {
+          if (error.message.includes("Email not confirmed")) {
+            toast.error("Please confirm your email before logging in. Check your inbox for the confirmation link.");
+          } else {
+            throw error;
+          }
+          return;
+        }
         toast.success("Welcome back!");
         navigate("/dashboard");
       } else {
@@ -33,7 +40,7 @@ export const AuthForm = () => {
           password,
         });
         if (error) throw error;
-        toast.success("Registration successful! Please check your email.");
+        toast.success("Registration successful! Please check your email for confirmation.");
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "An error occurred");
