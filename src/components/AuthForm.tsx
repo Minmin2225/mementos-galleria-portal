@@ -1,21 +1,45 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { toast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 type AuthMode = "login" | "register";
 
 export const AuthForm = () => {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<AuthMode>("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: mode === "login" ? "Welcome back!" : "Registration successful!",
-      description: "This is a demo - no actual authentication is performed.",
-    });
+    setLoading(true);
+
+    try {
+      if (mode === "login") {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) throw error;
+        toast.success("Welcome back!");
+        navigate("/dashboard");
+      } else {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
+        if (error) throw error;
+        toast.success("Registration successful! Please check your email.");
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "An error occurred");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,8 +68,8 @@ export const AuthForm = () => {
             required
           />
         </div>
-        <Button type="submit" className="w-full">
-          {mode === "login" ? "Sign In" : "Create Account"}
+        <Button type="submit" className="w-full" disabled={loading}>
+          {loading ? "Loading..." : mode === "login" ? "Sign In" : "Create Account"}
         </Button>
       </form>
       <p className="mt-4 text-center text-sm text-gray-400">
@@ -53,6 +77,7 @@ export const AuthForm = () => {
         <button
           onClick={() => setMode(mode === "login" ? "register" : "login")}
           className="ml-1 text-primary hover:underline"
+          type="button"
         >
           {mode === "login" ? "Sign up" : "Sign in"}
         </button>
