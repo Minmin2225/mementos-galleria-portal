@@ -1,6 +1,6 @@
 import { AuthForm } from "@/components/AuthForm";
 import { FeaturedArtworks } from "@/components/FeaturedArtworks";
-import { Button } from "@/components/ui/button";
+import { FeedbackForm } from "@/components/FeedbackForm";
 
 const Index = () => {
   return (
@@ -21,6 +21,16 @@ const Index = () => {
 
       {/* Featured Artworks */}
       <FeaturedArtworks />
+
+      {/* Feedback Section */}
+      <section className="py-16 px-4">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl font-bold mb-8">Share Your Feedback</h2>
+          <div className="flex justify-center">
+            <FeedbackForm />
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="py-8 text-center text-gray-400">
