@@ -13,7 +13,7 @@ const Index = () => {
             Mement Art Gallery
           </h1>
           <p className="text-xl md:text-2xl text-gray-300 mb-12 max-w-2xl mx-auto">
-            Experience the convergence of traditional artistry and contemporary vision
+            Jakol is the greates art of all
           </p>
           <AuthForm />
         </div>
